@@ -4,28 +4,41 @@ interface
 
 uses
   Horse,
-  model.login,
+  Horse.JWT,
+  System.DateUtils,
   System.SysUtils,
-  System.JSON;
+  System.JSON,
+  JOSE.Core.JWT,
+  JOSE.Core.Builder,
+  DotEnv4Delphi,
+  controller.jwt,
+  model.login;
 
 procedure Login;
-procedure Post(Req: THorseRequest; Res: THorseResponse);
+procedure ProcessLogin(Req : THorseRequest; Res : THorseResponse);
+
+function GenerateToken(nUserID : Integer) : String;
 
 implementation
 
 procedure Login;
 begin
-  THorse.Post('/login', Post);
+  THorse.Post('/login', ProcessLogin);
 end;
 
-procedure Post(Req: THorseRequest; Res: THorseResponse);
+procedure ProcessLogin(Req : THorseRequest; Res : THorseResponse);
 var
   DmLogin : TdmLogin;
+  Json    : TJSONObject;
 begin
   try
     DmLogin := TdmLogin.Create(nil);
     try
-      Res.Send<TJSONObject>(DmLogin.Login(TJSONObject.ParseJSONValue(Req.Body) as TJSONObject));
+      Json := DmLogin.Login(TJSONObject.ParseJSONValue(Req.Body) as TJSONObject);
+
+      Json.AddPair('jwt', GenerateToken(Json.GetValue<Integer>('id')));
+
+      Res.Send<TJSONObject>(Json);
     finally
       Res.Status(200);
       FreeAndNil(DmLogin);
@@ -37,6 +50,27 @@ begin
         Res.Send(E.Message);
       end;
   end;
+end;
+
+function GenerateToken(nUserID : Integer) : String;
+var
+  Token    : TJWT;
+  Claims   : TCustomClaims;
+  strToken : String;
+begin
+  Token := TJWT.Create();
+  try
+    Claims := TCustomClaims(Token.Claims);
+
+    Claims.Expiration := IncHour(Now, 1);
+    Claims.Id         := IntToStr(nUserID);
+
+    strToken := TJOSE.SHA256CompactToken(DotEnv.Env('JWT_PASSWORD'), Token);
+  finally
+    FreeAndNil(Token);
+  end;
+
+  Result := strToken;
 end;
 
 end.

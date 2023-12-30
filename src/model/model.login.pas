@@ -18,7 +18,7 @@ type
     { Private declarations }
   public
     { Public declarations }
-    function Login(ABody : TJSONObject) : TJSONObject;
+    function Login(Json : TJSONObject) : TJSONObject;
   end;
 
 implementation
@@ -27,12 +27,12 @@ implementation
 
 {$R *.dfm}
 
-function TdmLogin.Login(ABody : TJSONObject) : TJSONObject;
+function TdmLogin.Login(Json : TJSONObject) : TJSONObject;
 begin
   qLogin.SQL.Add('SELECT * FROM Users WHERE UserName = :UserName AND Password = :Password');
 
-  qLogin.Parameters.ParamByName('UserName').Value := ABody.GetValue<String>('UserName');
-  qLogin.Parameters.ParamByName('Password').Value := ABody.GetValue<String>('Password');
+  qLogin.Parameters.ParamByName('UserName').Value := Json.GetValue<String>('UserName');
+  qLogin.Parameters.ParamByName('Password').Value := Json.GetValue<String>('Password');
 
   qLogin.Open;
 
