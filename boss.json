@@ -1,0 +1,15 @@
+{
+	"name": "PromptMasteryTool",
+	"description": "",
+	"version": "1.0.0",
+	"homepage": "",
+	"mainsrc": "./src",
+	"projects": [],
+	"dependencies": {
+		"github.com/hashload/horse": "^3.1.5",
+		"github.com/hashload/horse-jwt": "^2.0.14",
+		"github.com/hashload/jhonson": "^1.1.6",
+		"github.com/viniciussanchez/dataset-serialize": "^v2.5.5",
+		"https://github.com/rafael-figueiredo-alves/dotenv4delphi": "^v1.4.0"
+	}
+}
