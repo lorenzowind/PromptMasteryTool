@@ -54,7 +54,6 @@ end;
 procedure ProcessCreateUser(Req : THorseRequest; Res : THorseResponse);
 var
   DmUsers : TdmUsers;
-  Json    : TJSONObject;
 begin
   try
     DmUsers := TdmUsers.Create(nil);

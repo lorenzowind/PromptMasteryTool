@@ -1,4 +1,5 @@
 inherited dmUsers: TdmUsers
+  OldCreateOrder = True
   object qUsers: TADOQuery
     Connection = DB
     Parameters = <>

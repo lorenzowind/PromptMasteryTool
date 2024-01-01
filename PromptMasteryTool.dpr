@@ -11,10 +11,10 @@ uses
   System.SysUtils,
   System.IOUtils,
   controller.login in 'src\controller\controller.login.pas',
-  model.con in 'src\model\model.con.pas' {dmCon: TDataModule},
-  model.login in 'src\model\model.login.pas' {dmLogin: TDataModule},
+  model.con in 'src\model\model.con.pas',
+  model.login in 'src\model\model.login.pas',
   controller.jwt in 'src\controller\controller.jwt.pas',
-  model.users in 'src\model\model.users.pas' {dmUsers: TDataModule},
+  model.users in 'src\model\model.users.pas',
   controller.users in 'src\controller\controller.users.pas';
 
 begin
