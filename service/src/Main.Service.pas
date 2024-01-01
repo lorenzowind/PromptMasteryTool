@@ -31,11 +31,16 @@ implementation
 
 uses
   Horse,
+  Horse.Compression,
+  Horse.HandleException,
   Horse.Jhonson,
+  Horse.Logger,
+  Horse.Logger.Provider.LogFile,
   DotEnv4Delphi,
   System.IOUtils,
   controller.login,
-  controller.users;
+  controller.users,
+  utils.logger;
 
 {$R *.dfm}
 
@@ -50,10 +55,19 @@ begin
 end;
 
 procedure TPromptMasteryTool.ServiceCreate(Sender: TObject);
+var
+  strPath : String;
 begin
-  DotEnv.Config(TPath.Combine(ExtractFileDir(ExtractFileDir(ExtractFileDir(ExtractFileDir(ParamStr(0))))), '.env'), True);
+  strPath := ExtractFileDir(ExtractFileDir(ExtractFileDir(ExtractFileDir(ParamStr(0)))));
 
-  THorse.Use(Jhonson);
+  DotEnv.Config(TPath.Combine(strPath, '.env'), True);
+
+  THorseLoggerManager.RegisterProvider(THorseLoggerProviderLogFile.New(GetLoggerConfig(strPath)));
+
+  THorse.Use(Compression());
+  THorse.Use(Jhonson());
+  THorse.Use(HandleException);
+  THorse.Use(THorseLoggerManager.HorseCallback);
 
   Login;
   Users;

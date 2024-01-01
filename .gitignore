@@ -70,3 +70,5 @@ modules/
 
 # DotEnv environment variables during Development
 .env
+
+data/

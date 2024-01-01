@@ -2,13 +2,14 @@ program PromptMasteryToolSvc;
 
 uses
   Vcl.SvcMgr,
-  Main.Service in 'src\Main.Service.pas',
+  Main.Service in 'src\Main.Service.pas' {PromptMasteryTool: TService},
   controller.users in '..\src\controller\controller.users.pas',
   controller.login in '..\src\controller\controller.login.pas',
   controller.jwt in '..\src\controller\controller.jwt.pas',
-  model.users in '..\src\model\model.users.pas',
-  model.login in '..\src\model\model.login.pas',
-  model.con in '..\src\model\model.con.pas';
+  model.users in '..\src\model\model.users.pas' {dmUsers: TDataModule},
+  model.login in '..\src\model\model.login.pas' {dmLogin: TDataModule},
+  model.con in '..\src\model\model.con.pas' {dmCon: TDataModule},
+  utils.logger in '..\src\utils\utils.logger.pas';
 
 {$R *.RES}
 

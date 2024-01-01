@@ -6,7 +6,11 @@ program PromptMasteryTool;
 
 uses
   Horse,
+  Horse.Compression,
+  Horse.HandleException,
   Horse.Jhonson,
+  Horse.Logger,
+  Horse.Logger.Provider.LogFile,
   DotEnv4Delphi,
   System.SysUtils,
   System.IOUtils,
@@ -15,12 +19,22 @@ uses
   model.login in 'src\model\model.login.pas',
   controller.jwt in 'src\controller\controller.jwt.pas',
   model.users in 'src\model\model.users.pas',
-  controller.users in 'src\controller\controller.users.pas';
+  controller.users in 'src\controller\controller.users.pas',
+  utils.logger in 'src\utils\utils.logger.pas';
 
+var
+  strPath : String;
 begin
-  DotEnv.Config(TPath.Combine(ExtractFileDir(ExtractFileDir(ExtractFileDir(ParamStr(0)))), '.env'), True);
+  strPath := ExtractFileDir(ExtractFileDir(ExtractFileDir(ParamStr(0))));
 
-  THorse.Use(Jhonson);
+  DotEnv.Config(TPath.Combine(strPath, '.env'), True);
+
+  THorseLoggerManager.RegisterProvider(THorseLoggerProviderLogFile.New(GetLoggerConfig(strPath)));
+
+  THorse.Use(Compression());
+  THorse.Use(Jhonson());
+  THorse.Use(HandleException);
+  THorse.Use(THorseLoggerManager.HorseCallback);
 
   controller.login.Login;
   controller.users.Users;
